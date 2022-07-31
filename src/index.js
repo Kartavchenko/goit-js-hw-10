@@ -48,7 +48,7 @@ function dataOfCountry(name) {
   const markupData = name.map(data => {
     return `<div>Capital: ${data.capital}</div>
     <div>Population: ${data.population}</div>
-    <div>Languages: ${console.log((data.languages)[0].name)}</div>`
+    <div>Languages: ${(data.languages)[0].name}</div>`
   }).join("");
   countryInfo.innerHTML = markupData;
 };
