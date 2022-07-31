@@ -1,27 +1,26 @@
 import './css/styles.css';
-import { getCountries } from "./fetchCountries";
+import newApiService from "./js/fetchCountries";
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
-const contriesUrl = getCountries;
 
 const input = document.querySelector("#search-box");
 const countryList = document.querySelector(".country-list");
 const countryInfo = document.querySelector(".country-info");
 
-const URL_API = 'https://restcountries.com/v2';
+const serviceApi = new newApiService();
+
 const DEBOUNCE_DELAY = 300;
 
 input.addEventListener("input", debounce(searchCountries, DEBOUNCE_DELAY));
 
 function searchCountries() {
   const inputValue = input.value.trim();
-  fetchCountries(inputValue)
+serviceApi.fetchCountries(inputValue)
     .then(showOnCountries);
   if (inputValue === "") {
     countryList.innerHTML = "";
   }
-}
+};
 
 function showOnCountries(name) {
 
@@ -49,18 +48,14 @@ function dataOfCountry(name) {
   const markupData = name.map(data => {
     return `<div>Capital: ${data.capital}</div>
     <div>Population: ${data.population}</div>
-    <div>Languages: ${data.languages}</div>`
+    <div>Languages: ${console.log((data.languages)[0].name)}</div>`
   }).join("");
   countryInfo.innerHTML = markupData;
-}
+};
 
-function fetchCountries(name) {
-  return fetch(`${URL_API}/name/${name}?fields=name,capital,population,flags,languages`)
-    .then(response => {
-      if (!response.ok) {
-        Notify.failure("Oops, there is no country with that name");
-        throw new Error(response.status);
-      }
-      return response.json();
-    });
+function findLanguages(lang) {
+  const markupLang = lang.map(data => {
+    return `<div>${data.languages[{iso639_1}]}</div>`
+  }).join("");
+  countryInfo.insertAdjacentHTML("afterend", markupLang);
 };
