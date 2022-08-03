@@ -16,11 +16,18 @@ input.addEventListener("input", debounce(searchCountries, DEBOUNCE_DELAY));
 function searchCountries() {
   const inputValue = input.value.trim();
 serviceApi.fetchCountries(inputValue)
-    .then(showOnCountries);
+  .then(showOnCountries)
+  .catch(showError)
   if (inputValue === "") {
     countryList.innerHTML = "";
   }
 };
+
+function showError() {
+  if (input.value === "") {
+    Notify.failure("Oops, there is no country with that name");
+  }
+}
 
 function showOnCountries(name) {
 
@@ -48,14 +55,8 @@ function dataOfCountry(name) {
   const markupData = name.map(data => {
     return `<div>Capital: ${data.capital}</div>
     <div>Population: ${data.population}</div>
-    <div>Languages: ${(data.languages)[0].name}</div>`
+    <div>Languages: ${data.languages.map(lang =>
+      Object.values(lang.name).join(""))}</div>`
   }).join("");
   countryInfo.innerHTML = markupData;
-};
-
-function findLanguages(lang) {
-  const markupLang = lang.map(data => {
-    return `<div>${data.languages[{iso639_1}]}</div>`
-  }).join("");
-  countryInfo.insertAdjacentHTML("afterend", markupLang);
 };
