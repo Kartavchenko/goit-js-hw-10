@@ -15,22 +15,22 @@ input.addEventListener("input", debounce(searchCountries, DEBOUNCE_DELAY));
 
 function searchCountries() {
   const inputValue = input.value.trim();
-serviceApi.fetchCountries(inputValue)
-  .then(showOnCountries)
-  .catch(showError)
   if (inputValue === "") {
     countryList.innerHTML = "";
+    countryInfo.innerHTML = "";
+    return;
   }
+serviceApi.fetchCountries(inputValue)
+  .then(showOnCountries)
+  .catch((error) => { Notify.failure("Oops, there is no country with that name")})
 };
 
-function showError() {
-  if (input.value === "") {
-    Notify.failure("Oops, there is no country with that name");
-  }
-}
-
 function showOnCountries(name) {
-
+  console.log(name)
+  if (name.length === 0) {
+    Notify.failure("Oops, there is no country with that name");
+    return;
+  }
   if (name.length <= 10) {
     const markupName = name.map((country) => {
       return `<li><img src ="${country.flags.svg}" width = "20" heigth = "20"/>
